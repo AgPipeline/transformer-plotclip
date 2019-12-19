@@ -38,7 +38,7 @@ The command line parameters after the image name are passed to the software insi
 Note that the paths provided are relative to the running image (see the --mount option specified above).
 
 - `--working_space "/mnt"` specifies the folder to use as a workspace
-- `--metadata "/mnt/3c807fe1-a5ba-4b4b-b618-1d2c9c981678_metadata_cleaned.json"` is the name of the source metadata to be cleaned
+- `--metadata "/mnt/3c807fe1-a5ba-4b4b-b618-1d2c9c981678_metadata_cleaned.json"` is the name of the source metadata
 - `--epsg 32612` the default EPSG identifier to use if a file doesn't contain a coordinate system (in this case 32612)
 - `scanner3DTop` the name of the sensor associated with the source files
 - `/mnt/3c807fe1-a5ba-4b4b-b618-1d2c9c981678__Top-heading-east_0.las` the GeoTIFF or LAS file to split by plot (in this example an LAS file is specified) 
