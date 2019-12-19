@@ -17,7 +17,7 @@ The files that are used in this example are available through Google Drive: [ua_
 ```docker run --rm --mount "src=/home/test,target=/mnt,type=bind" -e "BETYDB_URL=<BETYdb URL>" -e "BETYDB_KEY=<BETYdb Key>" agpipeline/plotclip:3.0 --working_space /mnt --metadata /mnt/3c807fe1-a5ba-4b4b-b618-1d2c9c981678_metadata_cleaned.json --epsg 32612 scanner3DTop /mnt/3c807fe1-a5ba-4b4b-b618-1d2c9c981678__Top-heading-east_0.las```
 
 This example command line assumes the source files are located in the `/home/test` folder of the local machine.
-The name of the image to run is `agpipeline/plotclip:3.0`.
+The name of the Docker image to run is `agpipeline/plotclip:3.0`.
 
 We are using the same folder for the source files and the output files.
 By using multiple `--mount` options, the source and output files can be separated.
