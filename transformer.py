@@ -389,7 +389,6 @@ class __internal__():
 
         return dest_md
 
-
 def add_parameters(parser: argparse.ArgumentParser) -> None:
     """Adds parameters
     Arguments:
@@ -430,6 +429,7 @@ def perform_process(transformer: transformer_class.Transformer, check_md: dict, 
         file_path = files_to_process[filename]['path']
         file_bounds = files_to_process[filename]['bounds']
         sensor = files_to_process[filename]['sensor_name']
+        logging.debug("File bounds: %s", str(file_bounds))
 
         overlap_plots = find_plots_intersect_boundingbox(file_bounds, all_plots, fullmac=True)
         logging.info("Have %s plots intersecting file '%s'", str(len(overlap_plots)), filename)
