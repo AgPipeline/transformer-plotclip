@@ -12,7 +12,9 @@ Below is a sample command line that shows how the plot clip image could be run.
 An explanation of the command line options used follows.
 Be sure to read up on the [docker run](https://docs.docker.com/engine/reference/run/) command line for more information.
 
-```docker run --rm --mount "src=/home/test,target=/mnt,type=bind" -e "BETYDB_URL=<BETYdb URL>" -e "BETYDB_KEY=<BETYdb Key>" agpipeline/plotclip:3.0 --working_space /mnt --metadata /mnt/8701d242-10ac-4c76-8794-804db7230c4b_metadata_cleaned.json --epsg 32612 scanner3DTop /mnt/scanner3DTop_L1_ua-mac_2018-06-21__23-55-59-990.las```
+The files that are used in this example are available through Google Drive: [ua_gantry_plot_clip_test_data.tar.gz](https://drive.google.com/file/d/17b7328H6B3olwesqKyjxYjfEDJiQz6N_/view?usp=sharing)
+
+```docker run --rm --mount "src=/home/test,target=/mnt,type=bind" -e "BETYDB_URL=<BETYdb URL>" -e "BETYDB_KEY=<BETYdb Key>" agpipeline/plotclip:3.0 --working_space /mnt --metadata /mnt/3c807fe1-a5ba-4b4b-b618-1d2c9c981678_metadata_cleaned.json --epsg 32612 scanner3DTop /mnt/3c807fe1-a5ba-4b4b-b618-1d2c9c981678__Top-heading-east_0.las```
 
 This example command line assumes the source files are located in the `/home/test` folder of the local machine.
 The name of the image to run is `agpipeline/plotclip:3.0`.
@@ -36,10 +38,10 @@ The command line parameters after the image name are passed to the software insi
 Note that the paths provided are relative to the running image (see the --mount option specified above).
 
 - `--working_space "/mnt"` specifies the folder to use as a workspace
-- `--metadata "/mnt/8701d242-10ac-4c76-8794-804db7230c4b_metadata_cleaned.json"` is the name of the source metadata to be cleaned
+- `--metadata "/mnt/3c807fe1-a5ba-4b4b-b618-1d2c9c981678_metadata_cleaned.json"` is the name of the source metadata to be cleaned
 - `--epsg 32612` the default EPSG identifier to use if a file doesn't contain a coordinate system (in this case 32612)
 - `scanner3DTop` the name of the sensor associated with the source files
-- `/mnt/scanner3DTop_L1_ua-mac_2018-06-21__23-55-59-990.las` the GeoTIFF or LAS file to split by plot (in this example an LAS file is specified) 
+- `/mnt/3c807fe1-a5ba-4b4b-b618-1d2c9c981678__Top-heading-east_0.las` the GeoTIFF or LAS file to split by plot (in this example an LAS file is specified) 
 
 ## Previous Version's Discontinued Features
 
