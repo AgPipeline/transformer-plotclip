@@ -8,14 +8,10 @@ import datetime
 import json
 import logging
 import os
-import re
-import subprocess
 from typing import Optional
-import numpy as np
-from osgeo import gdal, ogr, osr
-import liblas
 from agpypeline import algorithm, entrypoint, geometries, geoimage, lasfile
 from agpypeline.environment import Environment
+from osgeo import ogr, osr
 
 from configuration import ConfigurationPlotclip
 
@@ -106,7 +102,7 @@ class __internal__:
 
         # Search the dictionary
         if 'observationUnitName' in properties:
-            logging.debug('[get_plot_key_name] observationUnitName: "%s"', default_key, properties['observationUnitName'])
+            logging.debug('[get_plot_key_name] observationUnitName: "%s"', properties['observationUnitName'])
             return 'observationUnitName', properties['observationUnitName']
 
         best_fit = None
@@ -391,6 +387,7 @@ class PlotClip(algorithm.Algorithm):
         Arguments:
             parser: instance of argparse
         """
+        # pylint: disable=no-self-use
         parser.add_argument('--epsg', type=int, nargs='?',
                             help='default epsg code to use if a file doesn\'t have a coordinate system')
         parser.add_argument('--full_plot_fill', action='store_true',

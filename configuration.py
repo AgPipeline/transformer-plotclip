@@ -2,7 +2,9 @@
 """
 from agpypeline.configuration import Configuration
 
+
 class ConfigurationPlotclip(Configuration):
+    """Configuration for Plot Clip transformer"""
     # Silence this error until we have public methods
     # pylint: disable=too-few-public-methods
     # The version number of the transformer
@@ -29,5 +31,5 @@ class ConfigurationPlotclip(Configuration):
     # Contributors to this transformer
     contributors = ["Max Burnette"]
 
-    # Reposity URI of where the source code lives
+    # Repository URI of where the source code lives
     repository = 'https://github.com/AgPipeline/transformer-plotclip.git'
