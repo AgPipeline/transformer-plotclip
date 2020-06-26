@@ -1,29 +1,33 @@
 """Contains transformer configuration information
 """
+from agpypeline.configuration import Configuration
 
-# The version number of the transformer
-TRANSFORMER_VERSION = '2.0'
+class ConfigurationPlotclip(Configuration):
+    # Silence this error until we have public methods
+    # pylint: disable=too-few-public-methods
+    # The version number of the transformer
+    transformer_version = '2.0'
 
-# The transformer description
-TRANSFORMER_DESCRIPTION = 'TERRA-REF plot clipper'
+    # The transformer description
+    transformer_description = 'TERRA-REF plot clipper'
 
-# Short name of the transformer
-TRANSFORMER_NAME = 'terra.plotclipper'
+    # Short name of the transformer
+    transformer_name = 'terra.plotclipper'
 
-# The sensor associated with the transformer
-TRANSFORMER_SENSOR = 'scanner3DTop'
+    # The sensor associated with the transformer
+    transformer_sensor = 'scanner3DTop'
 
-# The transformer type (eg: 'rgbmask', 'plotclipper')
-TRANSFORMER_TYPE = 'plotclipper'
+    # The transformer type (eg: 'rgbmask', 'plotclipper')
+    transformer_type = 'plotclipper'
 
-# The name of the author of the extractor
-AUTHOR_NAME = 'Chris Schnaufer'
+    # The name of the author of the extractor
+    author_name = 'Chris Schnaufer'
 
-# The email of the author of the extractor
-AUTHOR_EMAIL = 'schnaufer@email.arizona.edu'
+    # The email of the author of the extractor
+    author_email = 'schnaufer@email.arizona.edu'
 
-# Contributors to this transformer
-CONTRUBUTORS = ["Max Burnette"]
+    # Contributors to this transformer
+    contributors = ["Max Burnette"]
 
-# Reposity URI of where the source code lives
-REPOSITORY = 'https://github.com/AgPipeline/transformer-plotclip.git'
+    # Reposity URI of where the source code lives
+    repository = 'https://github.com/AgPipeline/transformer-plotclip.git'
