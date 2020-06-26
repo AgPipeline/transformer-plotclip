@@ -380,7 +380,7 @@ class __internal__:
 
 
 class PlotClip(algorithm.Algorithm):
-    """Masks soil from an image"""
+    """Clips georeferenced files to plots"""
 
     def add_parameters(self, parser: argparse.ArgumentParser) -> None:
         """Adds parameters
