@@ -118,6 +118,15 @@ class __internal__:
             logging.debug('[get_plot_key_name] %s: "%s"', best_fit, properties[best_fit])
             return best_fit, properties[best_fit]
 
+        if 'id' in properties:
+            logging.debug('[get_plot_key_name] id: "%s"', properties['id'])
+            return 'id', properties['id']
+
+        for one_key in properties:
+            if one_key.lower().find('id') >= 0:
+                logging.debug('[get_plot_key_name]  ID best fit "%s"', one_key)
+                return one_key, properties[one_key]
+
         return None
 
     @staticmethod
