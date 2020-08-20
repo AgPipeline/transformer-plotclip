@@ -38,15 +38,21 @@ class __internal__:
             raise RuntimeError('GeoJSON crs type not specified "%s"' % str(crs))
         if crs['type'] == 'name':
             # eg: { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::32612" } }
-            if 'properties' not in crs or 'name' not in crs['properties']:
+            if 'properties' not in crs or not crs['properties']:
                 raise RuntimeError('Unknown named format specification in GeoJSON crs "%s"' % str(crs))
+            if 'name' not in crs['properties'] or not crs['properties']['name'] or \
+                    len(crs['properties']['name']) < len(ogc_crs_prefix):
+                raise RuntimeError('Missing named format specification in GeoJSON crs "%s"' % str(crs))
             sr_name = crs['properties']['name'][len(ogc_crs_prefix):]
+            if ':' not in sr_name:
+                raise RuntimeError('Invalid named format specification in GeoJSON crs "%s"' % str(crs))
             sr_type, sr_def = sr_name.split(':', 1)
             sr_type = sr_type.lower()
             sr_def = sr_def.strip(':')
         else:
             # eg: { "type": "EPSG", "properties": { "code": "4326" } }
-            if 'properties' not in crs or 'code' not in crs['properties']:
+            if 'properties' not in crs or not crs['properties'] or 'code' not in crs['properties'] or \
+                    not crs['properties']['code']:
                 raise RuntimeError('Unknown EPSG format specification in GeoJSON crs "%s"' % str(crs))
             sr_type = crs['type'].lower()
             sr_def = crs['properties']['code']

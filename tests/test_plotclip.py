@@ -98,7 +98,7 @@ def test_get_geojson_file_sr():
     import plotclip as pc
 
     res = pc.__internal__.get_geojson_file_sr({'crs':
-                                             {'properties': {'name': 'invalid code'}, 'type': 'urn:ogc:def:crs:EPSG::32612'}})
+                                             {'properties': {'name': 'urn:ogc:def:crs:EPSG::32612'}, 'type': 'name'}})
     assert res is not None
 
     # The default GeoJSON CRS should be returned
