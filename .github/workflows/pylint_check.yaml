@@ -23,7 +23,6 @@ jobs:
             - app: pylint
               pip_installs: pylint
               test_command: cat action_test_files.txt | xargs python3 -m pylint --rcfile ./pylint.rc
-              artifacts: ""
             - app: pytest
               pip_installs: pytest pytest-cov
               test_command: python3 -m pytest --cov=. -rpP > coverage.txt
@@ -88,5 +87,5 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: testing_artifacts
-          path: {{ matrix.artifacts }}
-        if: {{ matrix.artifacts }}
+          path: ${{ matrix.artifacts }}
+        if: ${{ matrix.artifacts }}
