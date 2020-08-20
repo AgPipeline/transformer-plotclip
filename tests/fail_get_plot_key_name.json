@@ -1,0 +1,5 @@
+[
+  {},
+  {"nothing": "here"},
+  {"nothing": "here", "something": {"id": "here"}}
+]
