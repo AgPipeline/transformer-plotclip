@@ -80,6 +80,9 @@ jobs:
         run: ls -la
       - name: Files to be tested
         run: cat action_test_files.txt
+      - name: DEBUGGING pytest
+        run: ./plotclip.py -h || ./plotclip.py --help
+        if: ${{ matric.name }} == "pytest"
       - name: Running test
         run: ${{ matrix.test_command }}
       - name: Post-test folder listing
