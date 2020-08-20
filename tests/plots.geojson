@@ -1,0 +1,9 @@
+{
+"type": "FeatureCollection",
+"name": "Season5_wheat_1row_Subplots",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::32612" } },
+"features": [
+{ "type": "Feature", "properties": { "Id": 1, "range": 1, "column": 1, "subplot_ro": "W" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 408989.3057, 3659975.661799999885 ], [ 408990.06767, 3659975.65485 ], [ 408990.03589, 3659972.1698 ], [ 408989.27392, 3659972.17674 ], [ 408989.3057, 3659975.661799999885 ] ] ] } },
+{ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [ [ [ 408990.06767, 3659975.65485 ], [ 408990.82964, 3659975.6479 ], [ 408990.7978599999915, 3659972.1628499999642 ], [ 408990.03589, 3659972.1698 ], [ 408990.06767, 3659975.65485 ] ] ] } }
+]
+}

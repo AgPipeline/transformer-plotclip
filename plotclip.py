@@ -152,7 +152,11 @@ class __internal__:
 
         # Load the file contents and check them
         with open(plot_file, 'r') as in_file:
-            geojson = json.load(in_file)
+            geojson = None
+            try:
+                geojson = json.load(in_file)
+            except json.JSONDecodeError:
+                pass
             if not geojson:
                 raise RuntimeError('No JSON was found in file: "%s"' % plot_file)
             for req_key in ['type', 'features']:
@@ -164,6 +168,10 @@ class __internal__:
         file_sr = __internal__.get_geojson_file_sr(geojson)
         if not file_sr:
             raise RuntimeError('Unable to load CRS for file "%s"' % plot_file)
+
+        # Check that we have some features
+        if not geojson['features']:
+            raise RuntimeError('Invalid or empty features for file "%s"' % plot_file)
 
         # Loop through the features
         feature_idx = 0

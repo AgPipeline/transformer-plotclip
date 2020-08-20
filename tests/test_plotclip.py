@@ -118,3 +118,47 @@ def test_get_plot_key_name():
             assert len(res) == 2
             assert res[0] in test
             assert res[1] == test[res[0]]
+
+
+def test_fail_load_plot_file():
+    """Tests the failure cases for loading JSON files"""
+    # pylint: disable=import-outside-toplevel
+    import plotclip as pc
+
+    # This test builds off the other tests that parse the JSON.
+    # We don't try all combinations of failure, just the ones directly in the function
+    data_file_name = os.path.realpath(os.path.join(TESTING_JSON_FILE_PATH, 'fail_load_plot_file.txt'))
+    assert os.path.exists(data_file_name)
+
+    with open(data_file_name, 'r') as in_file:
+        test = in_file.readline()
+        test_index = 1
+        while test:
+            json_file_name = '%d_fail_load_plot.json' % test_index
+            with open(json_file_name, 'w') as out_file:
+                out_file.write(test)
+            with pytest.raises(RuntimeError):
+                pc.__internal__.load_plot_file(json_file_name)
+            os.unlink(json_file_name)
+            test_index += 1
+            test = in_file.readline()
+
+
+def test_load_plot_file():
+    """Tests the successful loading of a JSON file"""
+    # pylint: disable=import-outside-toplevel
+    import plotclip as pc
+
+    # We just test the successful loading of a valid file
+    data_file_name = os.path.realpath(os.path.join(TESTING_JSON_FILE_PATH, 'plots.geojson'))
+    assert os.path.exists(data_file_name)
+
+    # Testing with different plot ID columns
+    for column_name in [None, 'Id', 'purple']:
+        plots = pc.__internal__.load_plot_file(data_file_name, column_name)
+        assert len(plots) == 2
+        plot_keys = plots.keys()
+        assert 1 in plot_keys
+        assert 'Plot 2' in plot_keys
+        for one_key in plot_keys:
+            assert plots[one_key] is not None

@@ -1,0 +1,13 @@
+
+{}
+{"features": []}
+{"type": "FeatureCollection"}
+{"type": "FeatureCollection", "features": null}
+{"type": "FeatureCollection","name": "SeasonX","crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs"}}},
+{"type": "FeatureCollection","name": "SeasonX","crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs"}}, "features": null},
+{"type": "FeatureCollection","name": "SeasonX","crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs"}}, "features": [{}]]},
+{"type": "FeatureCollection","name": "SeasonX","crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs"}}, "features": [{"type": None}]]},
+{"type": "FeatureCollection","name": "SeasonX","crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs"}}, "features": [{"type": ""}]]},
+{"type": "FeatureCollection","name": "SeasonX","crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs"}}, "features": [{"type": "Feature"}]]},
+{"type": "FeatureCollection","name": "SeasonX","crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs"}}, "features": [{"type": "Feature"}, "geometry": None]]},
+{"type": "FeatureCollection","name": "SeasonX","crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs"}}, "features": [{"type": "Feature"}, "geometry": {}]]},
