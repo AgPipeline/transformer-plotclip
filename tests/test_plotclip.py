@@ -20,8 +20,6 @@ def test_usage():
     """Program prints a "usage" statement when requested"""
     for flag in ['-h', '--help']:
         ret_val, out = getstatusoutput(f'{SOURCE_PATH} {flag}')
-        print(ret_val)
-        print(out)
         assert re.match('usage', out, re.IGNORECASE)
         assert ret_val == 0
 
