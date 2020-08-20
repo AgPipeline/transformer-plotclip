@@ -58,7 +58,7 @@ jobs:
         run: 'sudo apt-get install -y python3-gdal gdal-bin libgdal-dev gcc g++ python3.7-dev'
       - name: Install Python numpy
         shell: bash
-        run: 'python3 -m pip install --upgrade --no-cache-dir numpy wheel terrautils'
+        run: 'python3 -m pip install --upgrade --no-cache-dir numpy wheel'
       - name: Install Python pygdal
         shell: bash
         run: 'sudo python3 -m pip install --no-cache-dir pygdal==2.2.3.5'
@@ -80,3 +80,5 @@ jobs:
         run: cat action_test_files.txt
       - name: Running test
         run: ${{ matrix.test_command }}
+      - name: Post-test folder listing
+        run: ls -l
