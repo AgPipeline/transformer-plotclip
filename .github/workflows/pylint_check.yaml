@@ -4,7 +4,6 @@ on:
     branches:
       - master
       - develop
-      - adding_tests
   pull_request:
     branches:
       - master
@@ -80,9 +79,6 @@ jobs:
         run: ls -la
       - name: Files to be tested
         run: cat action_test_files.txt
-      - name: DEBUGGING pytest
-        run: ./plotclip.py -h || ./plotclip.py --help
-        if: ${{ matrix.name }} == "pytest"
       - name: Running test
         run: ${{ matrix.test_command }}
       - name: Post-test folder listing
