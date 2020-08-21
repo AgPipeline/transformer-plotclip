@@ -46,7 +46,7 @@ Note that the paths provided are relative to the running image (see the --mount 
 ## Testing Source Code
 
 Please also refer to our [Coding Standards](https://github.com/AgPipeline/Organization-info#python) for information on how we use [pylint](https://www.pylint.org/).
-As pylint command line could be:
+A pylint command line could be:
 ```bash
 # Assumes Python3 is default Python version
 pylint --rcfile ~/agpipeline/Organization-info/pylint.rc plotclip.py
