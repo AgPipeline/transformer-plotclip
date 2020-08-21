@@ -43,7 +43,7 @@ Note that the paths provided are relative to the running image (see the --mount 
 - `scanner3DTop` the name of the sensor associated with the source files
 - `/mnt/3c807fe1-a5ba-4b4b-b618-1d2c9c981678__Top-heading-east_0.las` the GeoTIFF or LAS file to split by plot (in this example an LAS file is specified) 
 
-## Testing
+## Testing Source Code
 
 Please also refer to our [Coding Standards](https://github.com/AgPipeline/Organization-info#python) for information on how we use [pylint](https://www.pylint.org/).
 As pylint command line could be:
