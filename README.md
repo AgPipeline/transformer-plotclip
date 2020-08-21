@@ -43,6 +43,25 @@ Note that the paths provided are relative to the running image (see the --mount 
 - `scanner3DTop` the name of the sensor associated with the source files
 - `/mnt/3c807fe1-a5ba-4b4b-b618-1d2c9c981678__Top-heading-east_0.las` the GeoTIFF or LAS file to split by plot (in this example an LAS file is specified) 
 
+## Testing
+
+Please also refer to our [Coding Standards](https://github.com/AgPipeline/Organization-info#python) for information on how we use [pylint](https://www.pylint.org/).
+
+In the `tests` folder there are testing scripts and their supporting files.
+The tests are designed to be run with [Pytest](https://docs.pytest.org/en/stable/).
+When running the tests, the root of the repository is expected to be the starting directory.
+
+The command line for running the tests is as follows:
+```python
+python3 -m pytest -rpP
+```
+
+If test coverage reporting is desired, we suggest using [pytest-cov](https://pytest-cov.readthedocs.io/en/latest/).
+After installing this tool, the following command line will include a coverage report in the output:
+```python
+python3 -m pytest --cov=. -rpP 
+```
+
 ## Previous Version's Discontinued Features
 
 - 4/1/2020: defaults to clipping RGB to the only the plot-image intersection by default; the `--full_plot_fill` command line flag restores previous default behavior
