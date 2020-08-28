@@ -8,7 +8,6 @@ import datetime
 import json
 import logging
 import os
-import sys
 from typing import Optional
 from agpypeline import algorithm, entrypoint, geometries, geoimage, lasfile
 from agpypeline.environment import Environment
@@ -516,4 +515,3 @@ class PlotClip(algorithm.Algorithm):
 if __name__ == "__main__":
     CONFIGURATION = ConfigurationPlotclip()
     entrypoint.entrypoint(CONFIGURATION, PlotClip())
-    sys.exit(0)
