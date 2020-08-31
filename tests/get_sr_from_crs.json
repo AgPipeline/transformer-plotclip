@@ -1,0 +1,5 @@
+[
+  {"type": "name", "properties": {"name": "urn:ogc:def:crs:EPSG::32612"}},
+  {"type": "EPSG", "properties": {"code": "4326"}},
+  {"type": "name", "properties": {"name": "urn:ogc:def:crs:OGC::CRS84"}}
+]
