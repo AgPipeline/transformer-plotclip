@@ -1,0 +1,17 @@
+[
+  {"nothing": null, "nada": 42},
+  {"type": null},
+  {"properties": null, "type": "name"},
+  {"properties": null, "type": "EPSG"},
+  {"properties": {}, "type": "name"},
+  {"properties": {}, "type": "EPSG"},
+  {"properties": {"silly": "putty"}, "type": "name"},
+  {"properties": {"silly": "putty"}, "type": "EPSG"},
+  {"properties": {"name": null}, "type": "name"},
+  {"properties": {"name": "urn:ogc:def:crs"}, "type": "name"},
+  {"properties": {"name": "urn:ogc:def:crs:"}, "type": "name"},
+  {"properties": {"name": "urn:ogc:def:crs:EPSG"}, "type": "name"},
+  {"properties": {"code": null}, "type": "EPSG"},
+  {"properties": {"name": "invalid code"}, "type": "EPSG"},
+  {"properties": {"name": "invalid code"}, "type": "invalid"}
+]
