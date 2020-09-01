@@ -470,7 +470,7 @@ class PlotClip(algorithm.Algorithm):
             parser: instance of argparse
         """
         # pylint: disable=no-self-use
-        parser.add_argument('--keep_empty_folders', '-k', type=bool, default=False, action='store_true',
+        parser.add_argument('--keep_empty_folders', '-k', default=False, action='store_true',
                             help='keep plot folders that were created but didn\'t intersect files')
         parser.add_argument('--epsg', type=int, nargs='?',
                             help='default epsg code to use if a file doesn\'t have a coordinate system')
