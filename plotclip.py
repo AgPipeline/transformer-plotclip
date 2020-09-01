@@ -401,6 +401,65 @@ class __internal__:
 
         return dest_md
 
+    @staticmethod
+    def delete_folders(empty_folders: list) -> None:
+        """Deletes folders and reports errors
+        Arguments:
+            empty_folders: List of empty folders to try to remove remove
+        """
+        for one_folder in empty_folders:
+            if os.path.exists(one_folder):
+                if len(os.listdir(one_folder)) <= 0:
+                    try:
+                        os.rmdir(one_folder)
+                    except FileNotFoundError:
+                        pass
+                    except OSError:
+                        logging.debug('Tried to remove plot folder that appeared empty: "%s"', one_folder)
+                    except Exception as ex:
+                        if logging.getLogger().level != logging.DEBUG:
+                            logging.info('Unknown exception when trying to remove plot folder "%s', one_folder)
+                            logging.info('  Exception: %s', str(ex))
+                        else:
+                            logging.exception('Unknown exception when trying to remove plot folder "%s', one_folder)
+
+    @staticmethod
+    def clip_tiff(file_source: str, file_bounds: ogr.Geometry, clip_bounds: ogr.Geometry, out_file: str,
+                  fill_plot: bool = False) -> None:
+        """Clips a TIFF file to the plot boundaries
+        Arguments:
+            file_source: path to source file to clip (file is assumed to be the correct type)
+            file_bounds: the geometric boundary of the source file
+            clip_bounds: the geometric boundary to clip to
+            out_file: the path to save the clipped image to
+            fill_plot: if set to True the clipped image is filled to the plot boundaries if needed. When False only the
+                    intersection between the image and the plot is saved (desirable in most cases)
+        """
+        out_path = os.path.dirname(out_file)
+        if not os.path.exists(out_path):
+            os.makedirs(out_path)
+
+        if not fill_plot:
+            geoimage.clip_raster_intersection(file_source, file_bounds, clip_bounds, out_file)
+        else:
+            logging.info("Clipping image to plot boundary with fill")
+            tuples = geometries.geometry_to_tuples(clip_bounds)
+            geoimage.clip_raster(file_source, tuples, out_path=out_file, compress=True)
+
+    @staticmethod
+    def clip_las(file_source: str, file_bounds: tuple, out_file: str) -> None:
+        """Clips LAS files
+        Arguments:
+            file_source: path to source file to clip (file is assumed to be the correct type)
+            file_bounds: a tuple representing the source file boundaries
+            out_file: the path to save the clipped LAS data to
+        """
+        out_path = os.path.dirname(out_file)
+        if not os.path.exists(out_path):
+            os.makedirs(out_path)
+
+        lasfile.clip_las(file_source, file_bounds, out_path=out_file)
+
 
 class PlotClip(algorithm.Algorithm):
     """Clips georeferenced files to plots"""
@@ -411,6 +470,8 @@ class PlotClip(algorithm.Algorithm):
             parser: instance of argparse
         """
         # pylint: disable=no-self-use
+        parser.add_argument('--keep_empty_folders', '-k', type=bool, default=False, action='store_true',
+                            help='keep plot folders that were created but didn\'t intersect files')
         parser.add_argument('--epsg', type=int, nargs='?',
                             help='default epsg code to use if a file doesn\'t have a coordinate system')
         parser.add_argument('--full_plot_fill', action='store_true',
@@ -441,6 +502,7 @@ class PlotClip(algorithm.Algorithm):
         logging.info("Found %s files to process", str(len(files_to_process)))
 
         container_md = []
+        possible_empty_folders = []
         if files_to_process:
             # Get all the possible plots
             logging.debug("Plots file: '%s' column: '%s'", str(environment.args.plot_file), str(environment.args.plot_column))
@@ -465,7 +527,6 @@ class PlotClip(algorithm.Algorithm):
                     if __internal__.calculate_overlap_percent(plot_bounds, file_bounds) < 0.10:
                         logging.info("Skipping plot with too small overlap: %s", plot_name)
                         continue
-                    tuples = geometries.geometry_to_tuples(plot_bounds)
 
                     plot_md = __internal__.cleanup_request_md(check_md)
                     plot_md['plot_name'] = plot_name
@@ -474,28 +535,29 @@ class PlotClip(algorithm.Algorithm):
                         # If file is a geoTIFF, simply clip it
                         out_path = os.path.join(check_md['working_folder'], plot_name)
                         out_file = os.path.join(out_path, filename)
-                        if not os.path.exists(out_path):
-                            os.makedirs(out_path)
+                        __internal__.clip_tiff(file_path, file_bounds, plot_bounds, out_file, environment.args.full_plot_fill)
 
-                        if not environment.args.full_plot_fill:
-                            geoimage.clip_raster_intersection(file_path, file_bounds, plot_bounds, out_file)
+                        if os.path.exists(out_file):
+                            cur_md = __internal__.prepare_container_md(plot_name, plot_md, sensor, file_path, [out_file])
+                            container_md = __internal__.merge_container_md(container_md, cur_md)
                         else:
-                            logging.info("Clipping image to plot boundary with fill")
-                            geoimage.clip_raster(file_path, tuples, out_path=out_file, compress=True)
-
-                        cur_md = __internal__.prepare_container_md(plot_name, plot_md, sensor, file_path, [out_file])
-                        container_md = __internal__.merge_container_md(container_md, cur_md)
+                            possible_empty_folders.append(out_path)
 
                     elif filename.endswith('.las'):
+                        tuples = geometries.geometry_to_tuples(plot_bounds)
                         out_path = os.path.join(check_md['working_folder'], plot_name)
                         out_file = os.path.join(out_path, filename)
-                        if not os.path.exists(out_path):
-                            os.makedirs(out_path)
+                        __internal__.clip_las(file_path, tuples, out_file)
 
-                        lasfile.clip_las(file_path, tuples, out_path=out_file)
+                        if os.path.exists(out_file):
+                            cur_md = __internal__.prepare_container_md(plot_name, plot_md, sensor, file_path, [out_file])
+                            container_md = __internal__.merge_container_md(container_md, cur_md)
+                        else:
+                            possible_empty_folders.append(out_path)
 
-                        cur_md = __internal__.prepare_container_md(plot_name, plot_md, sensor, file_path, [out_file])
-                        container_md = __internal__.merge_container_md(container_md, cur_md)
+        # Check for possibly empty folders that should be cleaned up
+        if not environment.args.keep_empty_folders and possible_empty_folders:
+            __internal__.delete_folders(possible_empty_folders)
 
         return {
             'code': 0,
