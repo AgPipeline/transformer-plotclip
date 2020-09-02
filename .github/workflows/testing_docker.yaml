@@ -30,8 +30,8 @@ jobs:
           path: plotclip_test_image.tar.gz
       - name: Create folders
         run: |
-             mkdir ./inputs
-             mkdir ./outputs
+             mkdir ./inputs && chmod 777 ./inputs
+             mkdir ./outputs && chmod 777 ./outputs
       - name: Download testing data files
         run: |
              curl -X GET https://de.cyverse.org/dl/d/4AF1E272-6A28-400D-B102-E0F6F168BA10/plotclip_sample_data.tar.gz > test_data.tar.gz
