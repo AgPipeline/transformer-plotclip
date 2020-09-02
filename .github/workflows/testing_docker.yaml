@@ -34,7 +34,7 @@ jobs:
              mkdir ./outputs
       - name: Download testing data files
         run: |
-             curl -X GET https://de.cyverse.org/dl/d/B3CE0357-AD90-417A-A6AF-40A066623169/plotclip_sample_data.tar.gz > test_data.tar.gz
+             curl -X GET https://de.cyverse.org/dl/d/4AF1E272-6A28-400D-B102-E0F6F168BA10/plotclip_sample_data.tar.gz > test_data.tar.gz
              tar xvzf test_data.tar.gz -C "./inputs/"
       - name: Folder contents
         run: |
