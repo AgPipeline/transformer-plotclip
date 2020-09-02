@@ -3,7 +3,7 @@
 # Script for checking the results of RGB plot clipping
 
 # Define some counts that we expect (the number of sub-folders plus the top folder)
-EXPECTED_NUM_FOLDERS=57
+EXPECTED_NUM_FOLDERS=58
 EXPECTED_NUM_CLIP_TIF=57
 
 # What folder are we looking in for outputs
