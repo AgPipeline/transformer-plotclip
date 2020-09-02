@@ -34,7 +34,7 @@ jobs:
              mkdir ./outputs
       - name: Download testing data files
         run: |
-             curl -X GET https://drive.google.com/file/d/1AHx6surpXV7izII2hn3c2wn_qnj5dvCb > test_data.tar.gz
+             curl -X GET https://drive.google.com/file/d/1AHx6surpXV7izII2hn3c2wn_qnj5dvCb/view?usp=sharing > test_data.tar.gz
              tar xvzf test_data.tar.gz -C "./inputs/"
       - name: Folder contents
         run: |
