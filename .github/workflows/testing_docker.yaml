@@ -17,6 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     name: Running Docker testing
     steps:
+      - name: Fetch source code
+        uses: actions/checkout@v2
       - name: Build docker image
         run: docker build -t plotclip_test:latest ./
       - name: Compress docker image
