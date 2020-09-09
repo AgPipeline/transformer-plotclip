@@ -7,7 +7,9 @@ Clip GeoTIFF or LAS files according to plots without merging.
 * Christophe Schnaufer, University of Arizona, Tucson, AZ
 * Max Burnette, National Supercomputing Applications, Urbana, Il
 
-## Sample Docker Command Line
+## Use 
+
+### Sample Docker Command Line
 
 First build the Docker image, using the Dockerfile, and tag it agdrone/transformer-plotclip:2.2. 
 Read about the [docker build](https://docs.docker.com/engine/reference/commandline/build/) command if needed.
