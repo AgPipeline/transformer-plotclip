@@ -8,13 +8,23 @@ Clip GeoTIFF or LAS files according to plots without merging.
 * Max Burnette, National Supercomputing Applications, Urbana, Il
 
 ## Sample Docker Command Line
+
+First build the Docker image, using the Dockerfile, and tag it agdrone/transformer-plotclip:2.2. 
+Read about the [docker build](https://docs.docker.com/engine/reference/commandline/build/) command if needed.
+
+```bash
+docker build -t agdrone/transformer-plotclip:2.2 ./
+```
+
 Below is a sample command line that shows how the plot clip image could be run.
 An explanation of the command line options used follows.
 Be sure to read up on the [docker run](https://docs.docker.com/engine/reference/run/) command line for more information.
 
 The files that are used in this example are available through Google Drive: [plotclip_sample_data.tar.gz](https://drive.google.com/file/d/1AHx6surpXV7izII2hn3c2wn_qnj5dvCb/view?usp=sharing).
 
-```docker run --rm --mount "src=/home/test,target=/mnt,type=bind" agdrone/transformer-plotclip:2.2 --working_space /mnt --metadata /mnt/experiment.yaml stereoTop /mnt/plots.json /mnt/orthomosaic.tif```
+```bash
+docker run --rm --mount "src=/home/test,target=/mnt,type=bind" agdrone/transformer-plotclip:2.2 --working_space /mnt --metadata /mnt/experiment.yaml stereoTop /mnt/plots.json /mnt/orthomosaic.tif
+```
 
 This example command line assumes the source files are located in the `/home/test` folder of the local machine.
 The name of the Docker image to run is `agdrone/transformer-plotclip:2.2`.
