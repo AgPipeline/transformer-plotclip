@@ -22,13 +22,20 @@ Below is a sample command line that shows how the plot clip image could be run.
 An explanation of the command line options used follows.
 Be sure to read up on the [docker run](https://docs.docker.com/engine/reference/run/) command line for more information.
 
-The files that are used in this example are available through Google Drive: [plotclip_sample_data.tar.gz](https://drive.google.com/file/d/1AHx6surpXV7izII2hn3c2wn_qnj5dvCb/view?usp=sharing).
-
+The files that are used in this example are available for downloading [plotclip_sample_data.tar.gz](https://de.cyverse.org/dl/d/4AF1E272-6A28-400D-B102-E0F6F168BA10/plotclip_sample_data.tar.gz).
+The following can be used to download and extract the contents of the test data archive:
 ```bash
-docker run --rm --mount "src=/home/test,target=/mnt,type=bind" agdrone/transformer-plotclip:2.2 --working_space /mnt --metadata /mnt/experiment.yaml stereoTop /mnt/plots.json /mnt/orthomosaic.tif
+mkdir test_data
+curl -X GET https://de.cyverse.org/dl/d/4AF1E272-6A28-400D-B102-E0F6F168BA10/plotclip_sample_data.tar.gz -o test_data/plotclip_sample_data.tar.gz
+tar -xzvf test_data/plotclip_sample_data.tar.gz -C test_data/
 ```
 
-This example command line assumes the source files are located in the `/home/test` folder of the local machine.
+The following command runs the plotclip Docker image:
+```bash
+docker run --rm --mount "src=/home/test_data,target=/mnt,type=bind" agdrone/transformer-plotclip:2.2 --working_space /mnt --metadata /mnt/experiment.yaml stereoTop /mnt/plots.json /mnt/orthomosaic.tif
+```
+
+This example command line assumes the source files are located in the `/home/test_data` folder of the local machine.
 The name of the Docker image to run is `agdrone/transformer-plotclip:2.2`.
 
 We are using the same folder for the source files and the output files.
@@ -39,9 +46,9 @@ Everything between 'docker' and the name of the image are docker commands.
 
 - `run` indicates we want to run an image
 - `--rm` automatically delete the image instance after it's run
-- `--mount "src=/home/test,target=/mnt,type=bind"` mounts the `/home/test` folder to the `/mnt` folder of the running image
+- `--mount "src=/home/test,target=/mnt,type=bind"` mounts the `/home/test_data` folder to the `/mnt` folder of the running image
 
-We mount the `/home/test` folder to the running image to make files available to the software in the image.
+We mount the `/home/test_data` folder to the running image to make files available to the software in the image.
 
 **Image's commands** \
 The command line parameters after the image name are passed to the software inside the image.
