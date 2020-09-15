@@ -8,10 +8,13 @@ import datetime
 import json
 import logging
 import os
+import subprocess
+import tempfile
 from typing import Optional
+import numpy as np
 from agpypeline import algorithm, entrypoint, geometries, geoimage, lasfile
 from agpypeline.environment import Environment
-from osgeo import ogr, osr
+from osgeo import gdal, ogr, osr
 
 from configuration import ConfigurationPlotclip
 
@@ -424,6 +427,35 @@ class __internal__:
                             logging.exception('Unknown exception when trying to remove plot folder "%s', one_folder)
 
     @staticmethod
+    def clip_to_cutline(source_file: str, clip_bounds: ogr.Geometry, dest_file: str) -> Optional[np.ndarray]:
+        """Clips an image to the specified geometry
+        Arguments:
+            source_file: the file to clip
+            clip_bounds: the geometry to clip the source file
+            dest_file: the destination of the clipping
+        Returns:
+            Returns the destination file pixels upon success and None otherwise
+        """
+        # Write the clipline to the CSV file
+        _, cutline_csv = tempfile.mkstemp(suffix=".csv")
+        logging.debug("clip_to_cutline: CSV %s", cutline_csv)
+        with open(cutline_csv, 'w') as out_file:
+            logging.debug("clip_to_cutline: WKT %s", str(clip_bounds))
+            out_file.write('id,WKT\n')
+            out_file.write(','.join(['1, "%s"' % str(clip_bounds)]))
+
+        # Clip to the cutline
+        cmd = 'gdalwarp -cutline %s %s %s' % (cutline_csv, source_file, dest_file)
+        logging.debug("clip_to_cutline: CMD: '%s'", cmd)
+        subprocess.call(cmd, shell=True, stdout=open(os.devnull, 'wb'))
+        out_px = np.array(gdal.Open(dest_file).ReadAsArray())
+        if np.count_nonzero(out_px) > 0:
+            return out_px
+
+        os.remove(dest_file)
+        return None
+
+    @staticmethod
     def clip_tiff(file_source: str, file_bounds: ogr.Geometry, clip_bounds: ogr.Geometry, out_file: str,
                   fill_plot: bool = False) -> None:
         """Clips a TIFF file to the plot boundaries
@@ -439,12 +471,21 @@ class __internal__:
         if not os.path.exists(out_path):
             os.makedirs(out_path)
 
+        # Create a temporary file to use for the initial clipping
+        _, temp_file = tempfile.mkstemp(suffix=os.path.splitext(out_file)[1])
         if not fill_plot:
-            geoimage.clip_raster_intersection(file_source, file_bounds, clip_bounds, out_file)
+            clip_res = geoimage.clip_raster_intersection(file_source, file_bounds, clip_bounds, temp_file)
         else:
             logging.info("Clipping image to plot boundary with fill")
             tuples = geometries.geometry_to_tuples(clip_bounds)
-            geoimage.clip_raster(file_source, tuples, out_path=out_file, compress=True)
+            clip_res = geoimage.clip_raster(file_source, tuples, out_path=temp_file, compress=True)
+
+        # Now clip to the shape of the clipping region
+        if clip_res is not None and os.path.exists(temp_file):
+            __internal__.clip_to_cutline(temp_file, clip_bounds, out_file)
+
+        if os.path.exists(temp_file):
+            os.unlink(temp_file)
 
     @staticmethod
     def clip_las(file_source: str, file_bounds: tuple, out_file: str) -> None:
@@ -492,7 +533,7 @@ class PlotClip(algorithm.Algorithm):
         Return:
             Returns a dictionary with the results of processing
         """
-        # pylint: disable=unused-argument
+        # pylint: disable=unused-argument, no-self-use
         # loop through the available files and clip data into plot-level files
         processed_files = 0
         processed_plots = 0
