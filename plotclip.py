@@ -445,7 +445,7 @@ class __internal__:
             out_file.write(','.join(['1, "%s"' % str(clip_bounds)]))
 
         # Clip to the cutline
-        cmd = 'gdalwarp -cutline %s %s %s' % (cutline_csv, source_file, dest_file)
+        cmd = 'gdalwarp -cutline %s "%s" "%s"' % (cutline_csv, source_file, dest_file)
         logging.debug("clip_to_cutline: CMD: '%s'", cmd)
         subprocess.call(cmd, shell=True, stdout=open(os.devnull, 'wb'))
         out_px = np.array(gdal.Open(dest_file).ReadAsArray())
