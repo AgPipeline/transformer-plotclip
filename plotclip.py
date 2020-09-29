@@ -440,12 +440,12 @@ class __internal__:
         _, cutline_csv = tempfile.mkstemp(suffix=".csv")
         logging.debug("clip_to_cutline: CSV %s", cutline_csv)
         with open(cutline_csv, 'w') as out_file:
-            logging.debug("clip_to_cutline: WKT %s", str(clip_bounds))
+            logging.debug("clip_to_cutline: WKT %s", geometries.geometry_to_geojson(clip_bounds))
             out_file.write('id,WKT\n')
-            out_file.write(','.join(['1, "%s"' % str(clip_bounds)]))
+            out_file.write(','.join(['1, "%s"' % geometries.geometry_to_geojson(clip_bounds)]))
 
         # Clip to the cutline
-        cmd = 'gdalwarp -cutline %s "%s" "%s"' % (cutline_csv, source_file, dest_file)
+        cmd = 'gdalwarp -crop_to_cutline -dstalpha -overwrite -cutline %s "%s" "%s"' % (cutline_csv, source_file, dest_file)
         logging.debug("clip_to_cutline: CMD: '%s'", cmd)
         subprocess.call(cmd, shell=True, stdout=open(os.devnull, 'wb'))
         out_px = np.array(gdal.Open(dest_file).ReadAsArray())
