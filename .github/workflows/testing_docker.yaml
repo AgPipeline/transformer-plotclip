@@ -36,6 +36,7 @@ jobs:
         run: |
              curl -X GET https://de.cyverse.org/dl/d/4AF1E272-6A28-400D-B102-E0F6F168BA10/plotclip_sample_data.tar.gz > test_data.tar.gz
              tar xvzf test_data.tar.gz -C "./inputs/"
+             chmod a+r ./inputs/*
       - name: Folder contents
         run: |
              echo "Current folder" && ls -l
