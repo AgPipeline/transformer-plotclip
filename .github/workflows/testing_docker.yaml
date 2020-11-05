@@ -18,6 +18,10 @@ jobs:
     runs-on: ubuntu-latest
     name: Running Docker testing
     steps:
+      - name: Install Python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
       - name: Fetch source code
         uses: actions/checkout@v2
       - name: Build docker image
