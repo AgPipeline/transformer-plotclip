@@ -17,6 +17,10 @@ jobs:
     runs-on: ubuntu-latest
     name: Running Docker testing
     steps:
+      - name: Install Python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
       - name: Fetch source code
         uses: actions/checkout@v2
       - name: Build docker image
@@ -50,6 +54,12 @@ jobs:
         run: |
              chmod +x "./.github/workflows/docker_test_check_rgb.sh"
              "./.github/workflows/docker_test_check_rgb.sh"
+      - name: Data quality check
+        run: |
+          mkdir -p test_data
+          curl -X GET "https://de.cyverse.org/dl/d/9CBF1C3E-23B1-4A33-B239-34E3B6CB7523/ci_soilmask_results.tar.gz" > ci_soilmask_results.tar.gz
+          tar xvzf ci_soilmask_results.tar.gz -C "./test_data"
+          python3 './.github/workflows/check_plotclip_details.py' ./test_data ./outputs
 
   artifact_cleanup:
     runs-on: ubuntu-latest
