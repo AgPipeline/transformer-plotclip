@@ -189,7 +189,7 @@ class __internal__:
             if 'type' not in one_feature or one_feature['type'] != 'Feature' or 'geometry' not in one_feature:
                 logging.info('Skipping unknown feature at index %s: "%s"', str(feature_idx), str(plot_file))
                 continue
-            if 'properties' in one_feature:
+            if 'properties' in one_feature and one_feature['properties']:
                 plot_key, plot_name = __internal__.get_plot_key_name(one_feature['properties'], plot_key)
             if not plot_name:
                 plot_name = 'Plot ' + str(feature_idx)
@@ -245,15 +245,14 @@ class __internal__:
         return intersecting_plots
 
     @staticmethod
-    def get_files_to_process(file_list: list, sensor: str, default_epsg: int = None) -> dict:
+    def get_files_to_process(file_list: list, default_epsg: int = None) -> dict:
         """Returns a dictionary of georeferenced files to process
         Arguments:
             file_list: the list of file paths to process
-            sensor: the name of the sensor associated with the files
             default_epsg: the default EPSG value to use if a file is missing one
         Return:
             Returns a dictionary with the file names as keys. Each key's value is another dictionary containing
-            the file path, file bounds (as ogr.Geometry), and the sensor name
+            the file path and the file bounds (as ogr.Geometry)
         """
         files_to_process = {}
         for one_file in file_list:
@@ -267,14 +266,12 @@ class __internal__:
             if one_file.endswith('.tif'):
                 files_to_process[filename] = {
                     'path': one_file,
-                    'bounds': geoimage.get_image_bounds(one_file, default_epsg),
-                    'sensor_name': sensor
+                    'bounds': geoimage.get_image_bounds(one_file, default_epsg)
                 }
             elif one_file.endswith(".las"):
                 files_to_process[filename] = {
                     'path': one_file,
-                    'bounds': lasfile.get_las_extents(one_file, default_epsg),
-                    'sensor_name': sensor
+                    'bounds': lasfile.get_las_extents(one_file, default_epsg)
                 }
         return files_to_process
 
@@ -320,12 +317,11 @@ class __internal__:
         return new_md
 
     @staticmethod
-    def prepare_container_md(plot_name: str, plot_md: dict, sensor: str, source_file: str, result_files: list) -> dict:
+    def prepare_container_md(plot_name: str, plot_md: dict, source_file: str, result_files: list) -> dict:
         """Prepares the metadata for a single container
         Arguments:
             plot_name: the name of the container
             plot_md: the metadata associated with this container
-            sensor: the name of the related sensor
             source_file: the name of the source file
             result_files: list of files to add to container metadata
         Return:
@@ -345,7 +341,6 @@ class __internal__:
             if os.path.exists(one_file):
                 cur_md['file'].append({
                     'path': one_file,
-                    'key': sensor,
                     'metadata': {
                         'source': source_file,
                         'transformer': ConfigurationPlotclip.transformer_name,
@@ -520,7 +515,6 @@ class PlotClip(algorithm.Algorithm):
                                  'original image boundaries)')
         parser.add_argument('--plot_column', type=str,
                             help='the name of the column in the plot geometry file containing plot names')
-        parser.add_argument('sensor', type=str, help='the name of the sensor associated with the source files')
         parser.add_argument('plot_file', type=str, help='the path of the GeoJSON file to use for plot boundaries')
 
     def perform_process(self, environment: Environment, check_md: dict, transformer_md: dict, full_md: list) -> dict:
@@ -539,7 +533,7 @@ class PlotClip(algorithm.Algorithm):
         processed_plots = 0
         start_timestamp = datetime.datetime.now()
         file_list = check_md['list_files']()
-        files_to_process = __internal__.get_files_to_process(file_list, environment.args.sensor, environment.args.epsg)
+        files_to_process = __internal__.get_files_to_process(file_list, environment.args.epsg)
         logging.info("Found %s files to process", str(len(files_to_process)))
 
         container_md = []
@@ -554,7 +548,6 @@ class PlotClip(algorithm.Algorithm):
                 processed_files += 1
                 file_path = files_to_process[filename]['path']
                 file_bounds = files_to_process[filename]['bounds']
-                sensor = files_to_process[filename]['sensor_name']
                 logging.debug("File bounds: %s", str(file_bounds))
 
                 overlap_plots = __internal__.find_plots_intersect_boundingbox(file_bounds, all_plots)
@@ -579,7 +572,7 @@ class PlotClip(algorithm.Algorithm):
                         __internal__.clip_tiff(file_path, file_bounds, plot_bounds, out_file, environment.args.full_plot_fill)
 
                         if os.path.exists(out_file):
-                            cur_md = __internal__.prepare_container_md(plot_name, plot_md, sensor, file_path, [out_file])
+                            cur_md = __internal__.prepare_container_md(plot_name, plot_md, file_path, [out_file])
                             container_md = __internal__.merge_container_md(container_md, cur_md)
                         else:
                             possible_empty_folders.append(out_path)
@@ -591,7 +584,7 @@ class PlotClip(algorithm.Algorithm):
                         __internal__.clip_las(file_path, tuples, out_file)
 
                         if os.path.exists(out_file):
-                            cur_md = __internal__.prepare_container_md(plot_name, plot_md, sensor, file_path, [out_file])
+                            cur_md = __internal__.prepare_container_md(plot_name, plot_md, file_path, [out_file])
                             container_md = __internal__.merge_container_md(container_md, cur_md)
                         else:
                             possible_empty_folders.append(out_path)
@@ -609,8 +602,7 @@ class PlotClip(algorithm.Algorithm):
                 'processing_time': str(datetime.datetime.now() - start_timestamp),
                 'total_file_count': len(file_list),
                 'processed_file_count': processed_files,
-                'total_plots_processed': processed_plots,
-                'sensor': environment.args.sensor
+                'total_plots_processed': processed_plots
             }
         }
 
