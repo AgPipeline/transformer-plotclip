@@ -47,7 +47,7 @@ jobs:
              echo "Inputs folder" && ls -l ./inputs
              echo "Outputs folder" && ls -l ./outputs
       - name: Run docker test
-        run: docker run --rm -v "${PWD}/inputs:/inputs" -v "${PWD}/outputs:/outputs" plotclip_test:latest --working_space /outputs --metadata /inputs/experiment.yaml stereoTop /inputs/plots.json /inputs/orthomosaic.tif
+        run: docker run --rm -v "${PWD}/inputs:/inputs" -v "${PWD}/outputs:/outputs" plotclip_test:latest --working_space /outputs --metadata /inputs/experiment.yaml /inputs/plots.json /inputs/orthomosaic.tif
       - name: Output folder contents
         run: echo "Outputs folder" && ls -l ./outputs
       - name: Check outputs
