@@ -32,7 +32,7 @@ tar -xzvf test_data/plotclip_sample_data.tar.gz -C test_data/
 
 The following command runs the plotclip Docker image:
 ```bash
-docker run --rm --mount "src=/home/test_data,target=/mnt,type=bind" agdrone/transformer-plotclip:2.2 --working_space /mnt --metadata /mnt/experiment.yaml stereoTop /mnt/plots.json /mnt/orthomosaic.tif
+docker run --rm --mount "src=/home/test_data,target=/mnt,type=bind" agdrone/transformer-plotclip:2.2 --working_space /mnt --metadata /mnt/experiment.yaml /mnt/plots.json /mnt/orthomosaic.tif
 ```
 
 This example command line assumes the source files are located in the `/home/test_data` folder of the local machine.
@@ -56,7 +56,6 @@ Note that the paths provided are relative to the running image (see the --mount 
 
 - `--working_space "/mnt"` specifies the folder to use as a workspace
 - `--metadata "/mnt/experiment.yaml"` is the name of the source metadata
-- `stereoTop` the name of the sensor associated with the source files
 - `/mnt/plots.json` the name of the GeoJSON file containing the plot geometries
 - `/mnt/orthomosaic.tif` the GeoTIFF or LAS file to split by plot (in this example an TIFF file is specified) 
 
@@ -111,5 +110,6 @@ The Docker testing Workflow replicate the examples in this document to ensure th
 
 ## Previous Version's Discontinued Features
 
+- 12/22/2020: removed previously required sensor parameter since it wasn't used
 - 4/1/2020: defaults to clipping RGB to the only the plot-image intersection by default; the `--full_plot_fill` command line flag restores previous default behavior
 - version 2.0 merged clipped LAS files into a single file
