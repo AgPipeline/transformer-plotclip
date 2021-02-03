@@ -4,6 +4,7 @@ on:
     branches:
       - master
       - develop
+      - ubuntu20.04
   pull_request:
     branches:
       - master
@@ -63,6 +64,9 @@ jobs:
       - name: Install Python requirements from source
         shell: bash
         run: '[ -s "requirements.txt" ] && (python3 -m pip install --no-cache-dir -r requirements.txt) || (echo "Failed to install Python requirements" && exit 1)'
+      - name: Install testpypi agpypeline
+        shell: bash
+        run: 'python3 -m pip install --upgrade --no-cache-dir --index-url https://test.pypi.org/simple/ agpypeline==0.0.106'
       - name: Run action pylint script
         shell: bash
         run: '[ -s ".github/workflows/action_pylint.sh" ] && (chmod +x ".github/workflows/action_pylint.sh" && ./.github/workflows/action_pylint.sh) || (echo "Error running shell script" && exit 1)'
