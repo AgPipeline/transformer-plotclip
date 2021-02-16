@@ -14,6 +14,7 @@ from typing import Optional
 import numpy as np
 from agpypeline import algorithm, entrypoint, geometries, geoimage, lasfile
 from agpypeline.environment import Environment
+from agpypeline.checkmd import CheckMD
 from osgeo import gdal, ogr, osr
 
 from configuration import ConfigurationPlotclip
@@ -299,7 +300,7 @@ class __internal__:
         return 0.0
 
     @staticmethod
-    def cleanup_request_md(source_md: dict) -> dict:
+    def cleanup_request_md(source_md: CheckMD) -> dict:
         """Makes a copy of the source metadata and cleans it up for use as plot-level information
         Arguments:
             source_md: the source metadata to clone and clean up
@@ -517,7 +518,7 @@ class PlotClip(algorithm.Algorithm):
                             help='the name of the column in the plot geometry file containing plot names')
         parser.add_argument('plot_file', type=str, help='the path of the GeoJSON file to use for plot boundaries')
 
-    def perform_process(self, environment: Environment, check_md: dict, transformer_md: dict, full_md: list) -> dict:
+    def perform_process(self, environment: Environment, check_md: CheckMD, transformer_md: dict, full_md: list) -> dict:
         """Performs the processing of the data
         Arguments:
             environment: instance of environment class
@@ -532,7 +533,7 @@ class PlotClip(algorithm.Algorithm):
         processed_files = 0
         processed_plots = 0
         start_timestamp = datetime.datetime.now()
-        file_list = check_md['list_files']()
+        file_list = check_md.get_list_files()
         files_to_process = __internal__.get_files_to_process(file_list, environment.args.epsg)
         logging.info("Found %s files to process", str(len(files_to_process)))
 
@@ -567,7 +568,7 @@ class PlotClip(algorithm.Algorithm):
 
                     if filename.endswith('.tif'):
                         # If file is a geoTIFF, simply clip it
-                        out_path = os.path.join(check_md['working_folder'], plot_name)
+                        out_path = os.path.join(check_md.working_folder, plot_name)
                         out_file = os.path.join(out_path, filename)
                         __internal__.clip_tiff(file_path, file_bounds, plot_bounds, out_file, environment.args.full_plot_fill)
 
@@ -579,7 +580,7 @@ class PlotClip(algorithm.Algorithm):
 
                     elif filename.endswith('.las'):
                         tuples = geometries.geometry_to_tuples(plot_bounds)
-                        out_path = os.path.join(check_md['working_folder'], plot_name)
+                        out_path = os.path.join(check_md.working_folder, plot_name)
                         out_file = os.path.join(out_path, filename)
                         __internal__.clip_las(file_path, tuples, out_file)
 
