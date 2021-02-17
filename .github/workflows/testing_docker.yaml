@@ -20,10 +20,16 @@ jobs:
     runs-on: ubuntu-latest
     name: Running Docker testing
     steps:
-      - name: Install Python 3.7
+      - name: Install Python 3.8
         uses: actions/setup-python@v2
         with:
-          python-version: '3.7'
+          python-version: '3.8'
+      - name: Updated python version
+        run: python3 --version
+      - name: Install python dependencies
+        run: |
+             python3 -m pip install -U pip
+             python3 -m pip install -U numpy Pillow
       - name: Fetch source code
         uses: actions/checkout@v2
       - name: Build docker image
