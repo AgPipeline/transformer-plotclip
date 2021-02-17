@@ -4,6 +4,8 @@
 
 import argparse
 import os
+import PIL.Image
+import numpy as np
 import subprocess
 
 # The default file extension to look for
@@ -34,6 +36,30 @@ def get_arguments() -> argparse.Namespace:
     return args
 
 
+def check_images(first_path: str, second_path: str) -> None:
+    """Compares the two image files and throws an exception if they don't match
+    Arguments:
+        first_path: the path to the first file to compare
+        second_path: the path to the second file to compare
+    """
+    first_pixels = PIL.Image.open(first_path)
+    first_array = np.array(first_pixels)
+    del first_pixels
+
+    second_pixels = PIL.Image.open(second_path)
+    second_array = np.array(second_pixels)
+    del second_pixels
+
+    if first_array.shape != second_array.shape:
+        raise RuntimeError("Image dimensions are different: %s vs %s" % (str(first_array.shape), str(second_array.shape)))
+
+    for i in range(0, first_array.shape[0]):
+        for j in range(0, first_array.shape[1]):
+            for k in range(0, first_array.shape[2]):
+                if first_array[i][j][k] - second_array[i][j][k] != 0:
+                    raise RuntimeError("Image pixels are different. First difference at %s %s %s" % (str(i), str(j), str(k)))
+
+
 def compare_file_contents(source_file: str, compare_file: str) -> bool:
     """Compares the source file against the comparison file for differences
     Arguments:
@@ -42,9 +68,13 @@ def compare_file_contents(source_file: str, compare_file: str) -> bool:
     Returns:
         Returns True if the files are considered the same, and False if they are not
     """
-    cmd = ['diff', '--brief', source_file, compare_file]
-    res = subprocess.run(cmd, capture_output=True, check=True)
-    return len(res.stdout) == 0
+    if (os.path.splitext(source_file)[1]).lower() in ['.tif', '.tiff']:
+        check_images(source_file, compare_file)
+        return True
+    else:
+        cmd = ['diff', '--brief', source_file, compare_file]
+        res = subprocess.run(cmd, capture_output=True, check=True)
+        return len(res.stdout) == 0
 
 
 def find_compare_files(truth_folder: str, compare_folder: str, file_ext: str, check_subfolders: bool = True) -> None:

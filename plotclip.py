@@ -3,7 +3,6 @@
 """
 
 import argparse
-import copy
 import datetime
 import json
 import logging
