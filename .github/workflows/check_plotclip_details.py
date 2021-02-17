@@ -4,9 +4,9 @@
 
 import argparse
 import os
+import subprocess
 import PIL.Image
 import numpy as np
-import subprocess
 
 # The default file extension to look for
 DEFAULT_FILE_EXT = '.tif'
@@ -71,10 +71,10 @@ def compare_file_contents(source_file: str, compare_file: str) -> bool:
     if (os.path.splitext(source_file)[1]).lower() in ['.tif', '.tiff']:
         check_images(source_file, compare_file)
         return True
-    else:
-        cmd = ['diff', '--brief', source_file, compare_file]
-        res = subprocess.run(cmd, capture_output=True, check=True)
-        return len(res.stdout) == 0
+
+    cmd = ['diff', '--brief', source_file, compare_file]
+    res = subprocess.run(cmd, capture_output=True, check=True)
+    return len(res.stdout) == 0
 
 
 def find_compare_files(truth_folder: str, compare_folder: str, file_ext: str, check_subfolders: bool = True) -> None:
@@ -105,6 +105,7 @@ def find_compare_files(truth_folder: str, compare_folder: str, file_ext: str, ch
         # Check truth folder for matching files and sub-folders
         for one_file in os.listdir(cur_truth):
             if os.path.splitext(one_file)[1].lower() == check_ext:
+                print("Checking file:", os.path.join(cur_truth, one_file))
                 if not os.path.exists(os.path.join(cur_compare, one_file)):
                     raise RuntimeError('Unable to find expected file "%s"' % os.path.join(cur_subpath, one_file))
                 if not compare_file_contents(os.path.join(cur_truth, one_file), os.path.join(cur_compare, one_file)):
