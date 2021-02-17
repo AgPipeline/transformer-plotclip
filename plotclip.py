@@ -310,10 +310,14 @@ class __internal__:
         if not source_md:
             return {}
 
-        new_md = copy.deepcopy(source_md)
-        new_md.pop('list_files', None)
-        new_md.pop('context_md', None)
-        new_md.pop('working_folder', None)
+        new_md = {
+            'timestamp': source_md.timestamp,
+            'season': source_md.season,
+            'experiment': source_md.experiment,
+            'container_name': source_md.container_name,
+            'target_container_name': source_md.target_container_name,
+            'trigger_name': source_md.trigger_name
+        }
 
         return new_md
 
