@@ -115,10 +115,7 @@ class __internal__:
             if plot_name_parts:
                 # If we're not joining several columns we keep the name unchanged. This preserves
                 # column names that are integers, and not integer strings, for example
-                if len(plot_name_parts) == 1:
-                    plot_name = plot_name_parts[0]
-                else:
-                    plot_name = '_'.join([str(part) for part in plot_name_parts])
+                plot_name = plot_name_parts[0] if len(plot_name_parts) == 1 else '_'.join([str(part) for part in plot_name_parts])
                 logging.debug('[get_plot_key_name] Default key "%s": "%s"', str(default_key), str(plot_name))
                 return default_key, plot_name
 
