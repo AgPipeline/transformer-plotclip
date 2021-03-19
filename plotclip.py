@@ -102,12 +102,22 @@ class __internal__:
             properties: a dictionary that's searched for well known plot name keys
             default_key: an optional key to check for first; if found it's returned otherwise a search is performed
         Return:
-            The found plot key name and current plot name, or None if nothing useable was found
+            The found plot key name and current plot name, or None if nothing usable was found
+        Notes: keys are colon-separated column names
         """
-        # Check if the key exists
-        if default_key and default_key in properties:
-            logging.debug('[get_plot_key_name] Default key "%s": "%s"', default_key, properties[default_key])
-            return default_key, properties[default_key]
+        # Check if the keys exist
+        if default_key:
+            check_keys = default_key.split(':')
+            plot_name_parts = []
+            for one_key in check_keys:
+                if one_key in properties:
+                    plot_name_parts.append(properties[one_key])
+            if plot_name_parts:
+                # If we're not joining several columns we keep the name unchanged. This preserves
+                # column names that are integers, and not integer strings, for example
+                plot_name = plot_name_parts[0] if len(plot_name_parts) == 1 else '_'.join([str(part) for part in plot_name_parts])
+                logging.debug('[get_plot_key_name] Default key "%s": "%s"', str(default_key), str(plot_name))
+                return default_key, plot_name
 
         # Search the dictionary
         if 'observationUnitName' in properties:
@@ -143,7 +153,7 @@ class __internal__:
         """Loads the GeoJSON plot file and returns a dict with plot names and geometries as key, value pairs
         Arguments:
             plot_file: the path of the GeoJSON file to load
-            plot_column: optional parameter specifying the name of column containing the plot names
+            plot_column: optional parameter specifying the names of the columns containing the plot names
         Return:
             A dict containing the loaded plots with their associated geometries as ogr.Geometry
         Exceptions:
@@ -518,7 +528,7 @@ class PlotClip(algorithm.Algorithm):
                             help='clipped images will be color filled to match the plot dimensions (outside the '
                                  'original image boundaries)')
         parser.add_argument('--plot_column', type=str,
-                            help='the name of the column in the plot geometry file containing plot names')
+                            help='colon-separated names of the columns in the plot geometry file comprising the plot names')
         parser.add_argument('plot_file', type=str, help='the path of the GeoJSON file to use for plot boundaries')
 
     def perform_process(self, environment: Environment, check_md: CheckMD, transformer_md: dict, full_md: list) -> dict:
