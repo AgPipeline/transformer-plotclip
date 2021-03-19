@@ -111,10 +111,15 @@ class __internal__:
             plot_name_parts = []
             for one_key in check_keys:
                 if one_key in properties:
-                    plot_name_parts.append(str(properties[one_key]))
+                    plot_name_parts.append(properties[one_key])
             if plot_name_parts:
-                plot_name = '_'.join(plot_name_parts)
-                logging.debug('[get_plot_key_name] Default key "%s": "%s"', default_key, plot_name)
+                # If we're not joining several columns we keep the name unchanged. This preserves
+                # column names that are integers, and not integer strings, for example
+                if len(plot_name_parts) == 1:
+                    plot_name = plot_name_parts[0]
+                else:
+                    plot_name = '_'.join([str(part) for part in plot_name_parts])
+                logging.debug('[get_plot_key_name] Default key "%s": "%s"', str(default_key), str(plot_name))
                 return default_key, plot_name
 
         # Search the dictionary

@@ -158,7 +158,7 @@ def test_load_plot_file():
         plots = pc.__internal__.load_plot_file(data_file_name, column_name)
         assert len(plots) == 2
         plot_keys = plots.keys()
-        assert 1 in plot_keys
+        assert (1 in plot_keys or '1' in plot_keys)
         assert 'Plot 2' in plot_keys
         for one_key in plot_keys:
             assert plots[one_key] is not None
