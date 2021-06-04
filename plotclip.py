@@ -9,7 +9,7 @@ import logging
 import os
 import subprocess
 import tempfile
-from typing import Optional
+from typing import Optional, List, Dict
 import numpy as np
 from agpypeline import algorithm, entrypoint, geometries, geoimage, lasfile
 from agpypeline.environment import Environment
@@ -550,7 +550,7 @@ class PlotClip(algorithm.Algorithm):
         files_to_process = __internal__.get_files_to_process(file_list, environment.args.epsg)
         logging.info("Found %s files to process", str(len(files_to_process)))
 
-        container_md = []
+        container_md: List[Dict] = []
         possible_empty_folders = []
         if files_to_process:
             # Get all the possible plots
