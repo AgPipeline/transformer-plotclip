@@ -73,7 +73,7 @@ jobs:
         run: wget https://raw.githubusercontent.com/AgPipeline/Organization-info/master/pylint.rc
         if: ${{ matrix.name }} == "pylint"
       - name: Fetching setup.cfg file
-        run: wget https://github.com/AgPipeline/Organization-info/blob/main/setup.cfg
+        run: wget https://raw.githubusercontent.com/AgPipeline/Organization-info/main/setup.cfg
         if: ${{ matrix.name }} == "pytest"
       - name: Set execution permission for testing
         run: chmod +x plotclip.py
