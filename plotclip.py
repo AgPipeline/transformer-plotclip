@@ -345,17 +345,10 @@ class __internal__:
         Notes:
             The files in result_files are checked for existence before being added to the metadata
         """
-        cur_md = {
-            'name': plot_name,
-            'metadata': {
-                'replace': True,
-                'data': plot_md
-            },
-            'file': []
-        }
+        file = []
         for one_file in result_files:
             if os.path.exists(one_file):
-                cur_md['file'].append({
+                file.append({
                     'path': one_file,
                     'metadata': {
                         'source': source_file,
@@ -365,6 +358,15 @@ class __internal__:
                         'plot_name': plot_name
                     }
                 })
+
+        cur_md = {
+            'name': plot_name,
+            'metadata': {
+                'replace': True,
+                'data': plot_md
+            },
+            'file': file
+        }
         return cur_md
 
     @staticmethod
