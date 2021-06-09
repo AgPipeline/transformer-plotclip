@@ -200,7 +200,9 @@ class __internal__:
                 logging.info('Skipping unknown feature at index %s: "%s"', str(feature_idx), str(plot_file))
                 continue
             if 'properties' in one_feature and one_feature['properties']:
-                plot_key, plot_name = __internal__.get_plot_key_name(one_feature['properties'], plot_key)
+                plot_key_name = __internal__.get_plot_key_name(one_feature['properties'], plot_key)
+                if plot_key_name is not None:
+                    plot_key, plot_name = plot_key_name
             if not plot_name:
                 plot_name = 'Plot ' + str(feature_idx)
 
