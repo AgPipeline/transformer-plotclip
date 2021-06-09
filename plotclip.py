@@ -96,7 +96,7 @@ class __internal__:
         return file_sr
 
     @staticmethod
-    def get_plot_key_name(properties: dict, default_key: str = None) -> Optional[tuple]:
+    def get_plot_key_name(properties: dict, default_key: str = None) -> tuple:
         """ Attempts to find the plot name from the set of properties
         Arguments:
             properties: a dictionary that's searched for well known plot name keys
@@ -146,7 +146,7 @@ class __internal__:
                 logging.debug('[get_plot_key_name]  ID best fit "%s"', one_key)
                 return one_key, properties[one_key]
 
-        return None
+        return None, None
 
     @staticmethod
     def load_plot_file(plot_file: str, plot_column: str = None) -> dict:
@@ -200,9 +200,7 @@ class __internal__:
                 logging.info('Skipping unknown feature at index %s: "%s"', str(feature_idx), str(plot_file))
                 continue
             if 'properties' in one_feature and one_feature['properties']:
-                plot_key_name = __internal__.get_plot_key_name(one_feature['properties'], plot_key)
-                if plot_key_name is not None:
-                    plot_key, plot_name = plot_key_name
+                plot_key, plot_name = __internal__.get_plot_key_name(one_feature['properties'], plot_key)
             if not plot_name:
                 plot_name = 'Plot ' + str(feature_idx)
 
