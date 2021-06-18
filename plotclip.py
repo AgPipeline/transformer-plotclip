@@ -9,7 +9,7 @@ import logging
 import os
 import subprocess
 import tempfile
-from typing import Optional
+from typing import Optional, List, Dict
 import numpy as np
 from agpypeline import algorithm, entrypoint, geometries, geoimage, lasfile
 from agpypeline.environment import Environment
@@ -96,7 +96,7 @@ class __internal__:
         return file_sr
 
     @staticmethod
-    def get_plot_key_name(properties: dict, default_key: str = None) -> Optional[tuple]:
+    def get_plot_key_name(properties: dict, default_key: str = None) -> tuple:
         """ Attempts to find the plot name from the set of properties
         Arguments:
             properties: a dictionary that's searched for well known plot name keys
@@ -146,7 +146,7 @@ class __internal__:
                 logging.debug('[get_plot_key_name]  ID best fit "%s"', one_key)
                 return one_key, properties[one_key]
 
-        return None
+        return None, None
 
     @staticmethod
     def load_plot_file(plot_file: str, plot_column: str = None) -> dict:
@@ -343,17 +343,10 @@ class __internal__:
         Notes:
             The files in result_files are checked for existence before being added to the metadata
         """
-        cur_md = {
-            'name': plot_name,
-            'metadata': {
-                'replace': True,
-                'data': plot_md
-            },
-            'file': []
-        }
+        file = []
         for one_file in result_files:
             if os.path.exists(one_file):
-                cur_md['file'].append({
+                file.append({
                     'path': one_file,
                     'metadata': {
                         'source': source_file,
@@ -363,6 +356,15 @@ class __internal__:
                         'plot_name': plot_name
                     }
                 })
+
+        cur_md = {
+            'name': plot_name,
+            'metadata': {
+                'replace': True,
+                'data': plot_md
+            },
+            'file': file
+        }
         return cur_md
 
     @staticmethod
@@ -550,7 +552,7 @@ class PlotClip(algorithm.Algorithm):
         files_to_process = __internal__.get_files_to_process(file_list, environment.args.epsg)
         logging.info("Found %s files to process", str(len(files_to_process)))
 
-        container_md = []
+        container_md: List[Dict] = []
         possible_empty_folders = []
         if files_to_process:
             # Get all the possible plots

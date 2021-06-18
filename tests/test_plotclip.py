@@ -99,7 +99,7 @@ def test_fail_get_plot_key_name():
         test_data = json.load(in_file)
         for test in test_data:
             res = pc.__internal__.get_plot_key_name(test)
-            assert res is None
+            assert res == (None, None)
 
 
 def test_get_plot_key_name():
@@ -114,7 +114,7 @@ def test_get_plot_key_name():
         test_data = json.load(in_file)
         for test in test_data:
             res = pc.__internal__.get_plot_key_name(test)
-            assert res is not None
+            assert res != (None, None)
             assert len(res) == 2
             assert res[0] in test
             assert res[1] == test[res[0]]

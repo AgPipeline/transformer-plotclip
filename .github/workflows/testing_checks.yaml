@@ -27,8 +27,8 @@ jobs:
               pip_installs: pylint pytest
               test_command: cat action_test_files.txt | xargs python3 -m pylint --rcfile ./pylint.rc
             - app: pytest
-              pip_installs: pytest pytest-cov
-              test_command: python3 -m pytest --cov=. -rpP --cov-report=xml
+              pip_installs: pytest pytest-cov pytest-mypy
+              test_command: python3 -m pytest --cov=. -rpP --mypy --cov-report=xml
               artifacts: coverage.txt
     steps:
       - name: Current python version
@@ -75,6 +75,9 @@ jobs:
       - name: Fetching pylint.rc file
         run: wget https://raw.githubusercontent.com/AgPipeline/Organization-info/master/pylint.rc
         if: ${{ matrix.name }} == "pylint"
+      - name: Fetching setup.cfg file
+        run: wget https://raw.githubusercontent.com/AgPipeline/Organization-info/main/setup.cfg
+        if: ${{ matrix.name }} == "pytest"
       - name: Set execution permission for testing
         run: chmod +x plotclip.py
       - name: Listing
