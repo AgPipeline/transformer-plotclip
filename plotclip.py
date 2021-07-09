@@ -458,7 +458,8 @@ class __internal__:
         # Clip to the cutline
         cmd = 'gdalwarp -crop_to_cutline -dstalpha -overwrite -cutline %s "%s" "%s"' % (cutline_csv, source_file, dest_file)
         logging.debug("clip_to_cutline: CMD: '%s'", cmd)
-        subprocess.call(cmd, shell=True, stdout=open(os.devnull, 'wb'))
+        with open(os.devnull, 'wb') as null_out:
+            subprocess.call(cmd, shell=True, stdout=null_out)
         out_px = np.array(gdal.Open(dest_file).ReadAsArray())
         if np.count_nonzero(out_px) > 0:
             return out_px
@@ -560,19 +561,19 @@ class PlotClip(algorithm.Algorithm):
             all_plots = __internal__.load_plot_file(environment.args.plot_file, environment.args.plot_column)
             logging.debug("Loaded %s plots", str(len(all_plots)))
 
-            for filename in files_to_process:
+            for filename, filename_info in files_to_process.items():
                 processed_files += 1
-                file_path = files_to_process[filename]['path']
-                file_bounds = files_to_process[filename]['bounds']
+                file_path = filename_info['path']
+                file_bounds = filename_info['bounds']
                 logging.debug("File bounds: %s", str(file_bounds))
 
                 overlap_plots = __internal__.find_plots_intersect_boundingbox(file_bounds, all_plots)
                 logging.info("Have %s plots intersecting file '%s'", str(len(overlap_plots)), filename)
 
                 file_spatial_ref = file_bounds.GetSpatialReference()
-                for plot_name in overlap_plots:
+                for plot_name, plot_info in overlap_plots.items():
                     processed_plots += 1
-                    plot_bounds = geometries.convert_geometry(overlap_plots[plot_name], file_spatial_ref)
+                    plot_bounds = geometries.convert_geometry(plot_info, file_spatial_ref)
                     logging.debug("Clipping out plot '%s': %s", str(plot_name), str(plot_bounds))
                     if __internal__.calculate_overlap_percent(plot_bounds, file_bounds) < 0.10:
                         logging.info("Skipping plot with too small overlap: %s", plot_name)
