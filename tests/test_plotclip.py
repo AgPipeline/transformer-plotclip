@@ -35,7 +35,7 @@ def test_fail_get_sr_from_crs():
     data_file_name = os.path.realpath(os.path.join(TESTING_JSON_FILE_PATH, 'fail_get_sr_from_crs.json'))
     assert os.path.exists(data_file_name)
 
-    with open(data_file_name, 'r') as in_file:
+    with open(data_file_name, 'r', encoding='utf-8') as in_file:
         test_data = json.load(in_file)
         for test in test_data:
             with pytest.raises(RuntimeError):
@@ -50,7 +50,7 @@ def test_get_sr_from_crs():
     data_file_name = os.path.realpath(os.path.join(TESTING_JSON_FILE_PATH, 'get_sr_from_crs.json'))
     assert os.path.exists(data_file_name)
 
-    with open(data_file_name, 'r') as in_file:
+    with open(data_file_name, 'r', encoding='utf-8') as in_file:
         test_data = json.load(in_file)
         for test in test_data:
             res = pc.__internal__.get_sr_from_crs(test)
@@ -65,7 +65,7 @@ def test_fail_get_geojson_file_sr():
     data_file_name = os.path.realpath(os.path.join(TESTING_JSON_FILE_PATH, 'fail_get_geojson_file_sr.json'))
     assert os.path.exists(data_file_name)
 
-    with open(data_file_name, 'r') as in_file:
+    with open(data_file_name, 'r', encoding='utf-8') as in_file:
         test_data = json.load(in_file)
         for test in test_data:
             with pytest.raises(RuntimeError):
@@ -80,7 +80,7 @@ def test_get_geojson_file_sr():
     data_file_name = os.path.realpath(os.path.join(TESTING_JSON_FILE_PATH, 'get_geojson_file_sr.json'))
     assert os.path.exists(data_file_name)
 
-    with open(data_file_name, 'r') as in_file:
+    with open(data_file_name, 'r', encoding='utf-8') as in_file:
         test_data = json.load(in_file)
         for test in test_data:
             res = pc.__internal__.get_geojson_file_sr(test)
@@ -95,7 +95,7 @@ def test_fail_get_plot_key_name():
     data_file_name = os.path.realpath(os.path.join(TESTING_JSON_FILE_PATH, 'fail_get_plot_key_name.json'))
     assert os.path.exists(data_file_name)
 
-    with open(data_file_name, 'r') as in_file:
+    with open(data_file_name, 'r', encoding='utf-8') as in_file:
         test_data = json.load(in_file)
         for test in test_data:
             res = pc.__internal__.get_plot_key_name(test)
@@ -110,7 +110,7 @@ def test_get_plot_key_name():
     data_file_name = os.path.realpath(os.path.join(TESTING_JSON_FILE_PATH, 'get_plot_key_name.json'))
     assert os.path.exists(data_file_name)
 
-    with open(data_file_name, 'r') as in_file:
+    with open(data_file_name, 'r', encoding='utf-8') as in_file:
         test_data = json.load(in_file)
         for test in test_data:
             res = pc.__internal__.get_plot_key_name(test)
@@ -130,12 +130,12 @@ def test_fail_load_plot_file():
     data_file_name = os.path.realpath(os.path.join(TESTING_JSON_FILE_PATH, 'fail_load_plot_file.txt'))
     assert os.path.exists(data_file_name)
 
-    with open(data_file_name, 'r') as in_file:
+    with open(data_file_name, 'r', encoding='utf-8') as in_file:
         test = in_file.readline()
         test_index = 1
         while test:
             json_file_name = '%d_fail_load_plot.json' % test_index
-            with open(json_file_name, 'w') as out_file:
+            with open(json_file_name, 'w', encoding='utf-8') as out_file:
                 out_file.write(test)
             with pytest.raises(RuntimeError):
                 pc.__internal__.load_plot_file(json_file_name)
