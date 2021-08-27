@@ -163,7 +163,7 @@ class __internal__:
         plots = {}
 
         # Load the file contents and check them
-        with open(plot_file, 'r') as in_file:
+        with open(plot_file, 'r', encoding='utf-8') as in_file:
             geojson = None
             try:
                 geojson = json.load(in_file)
@@ -450,7 +450,7 @@ class __internal__:
         # Write the clipline to the CSV file
         _, cutline_csv = tempfile.mkstemp(suffix=".csv")
         logging.debug("clip_to_cutline: CSV %s", cutline_csv)
-        with open(cutline_csv, 'w') as out_file:
+        with open(cutline_csv, 'w', encoding='utf-8') as out_file:
             logging.debug("clip_to_cutline: WKT %s", clip_bounds.ExportToWkt())
             out_file.write('id,WKT\n')
             out_file.write(','.join(['1, "%s"' % clip_bounds.ExportToWkt()]))
