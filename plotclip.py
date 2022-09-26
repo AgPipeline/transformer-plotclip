@@ -522,7 +522,6 @@ class PlotClip(algorithm.Algorithm):
         Arguments:
             parser: instance of argparse
         """
-        # pylint: disable=no-self-use
         parser.add_argument('--keep_empty_folders', '-k', default=False, action='store_true',
                             help='keep plot folders that were created but didn\'t intersect files')
         parser.add_argument('--epsg', type=int, nargs='?',
@@ -544,7 +543,7 @@ class PlotClip(algorithm.Algorithm):
         Return:
             Returns a dictionary with the results of processing
         """
-        # pylint: disable=unused-argument, no-self-use
+        # pylint: disable=unused-argument
         # loop through the available files and clip data into plot-level files
         processed_files = 0
         processed_plots = 0
