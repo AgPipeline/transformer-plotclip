@@ -96,7 +96,7 @@ class __internal__:
         return file_sr
 
     @staticmethod
-    def get_plot_key_name(properties: dict, default_key: str = None) -> tuple:
+    def get_plot_key_name(properties: dict, default_key: Optional[str] = None) -> tuple:
         """ Attempts to find the plot name from the set of properties
         Arguments:
             properties: a dictionary that's searched for well known plot name keys
@@ -149,7 +149,7 @@ class __internal__:
         return None, None
 
     @staticmethod
-    def load_plot_file(plot_file: str, plot_column: str = None) -> dict:
+    def load_plot_file(plot_file: str, plot_column: Optional[str] = None) -> dict:
         """Loads the GeoJSON plot file and returns a dict with plot names and geometries as key, value pairs
         Arguments:
             plot_file: the path of the GeoJSON file to load
@@ -255,7 +255,7 @@ class __internal__:
         return intersecting_plots
 
     @staticmethod
-    def get_files_to_process(file_list: list, default_epsg: int = None) -> dict:
+    def get_files_to_process(file_list: list, default_epsg: Optional[int] = None) -> dict:
         """Returns a dictionary of georeferenced files to process
         Arguments:
             file_list: the list of file paths to process
