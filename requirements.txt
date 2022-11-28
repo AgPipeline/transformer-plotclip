@@ -1,2 +1,2 @@
 dbfread
-agpypeline
+agpypeline==0.0.50
